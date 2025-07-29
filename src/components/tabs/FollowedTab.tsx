@@ -26,8 +26,10 @@ const FollowedTab = () => {
     key: "followedLive",
     instance: new Storage({ area: "local" })
   })
-  const [userTwitchKey] = useStorage("userTwitchKey")
-  const [kickFollows] = useStorage<string[]>("kickFollows")
+  const [userTwitchKey, , { isLoading: twitchKeyLoading }] =
+    useStorage("userTwitchKey")
+  const [kickFollows, , { isLoading: kickFollowsLoading }] =
+    useStorage<string[]>("kickFollows")
 
   const filteredStreams = followedLive?.data?.filter((stream) => {
     const matchesSearch = stream.user_name
@@ -47,10 +49,11 @@ const FollowedTab = () => {
     }
   })
 
+  const storageLoading = twitchKeyLoading || kickFollowsLoading
   const hasAnyPlatforms =
     userTwitchKey || (kickFollows && kickFollows.length > 0)
 
-  if (followedLive?.length === 0) {
+  if (followedLive?.length === 0 || storageLoading) {
     return (
       <div className="flex justify-center items-center h-full">
         <IconLoader2 className="h-8 w-8 animate-spin" />
