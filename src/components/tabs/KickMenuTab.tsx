@@ -37,7 +37,7 @@ const KickMenuTab = () => {
       if (kickFollows === undefined) {
         setKickFollows([nickname])
       } else {
-        setKickFollows([...kickFollows, nickname])
+        setKickFollows((prev) => [...prev, nickname])
       }
       setInfo("")
     } catch (e) {
@@ -46,22 +46,33 @@ const KickMenuTab = () => {
       setIsLoading(false)
     }
   }
-  const handleAddEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleAdd(kickNickname)
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    if (isLoading) {
+      return
     }
+
+    if (!kickNickname) {
+      setInfo("Please enter a nickname")
+      return
+    }
+
+    handleAdd(kickNickname)
   }
-  
+
   return (
     <div className="flex flex-col h-full gap-4 items-center justify-center">
-      <div className="w-9/12 flex flex-row items-center justify-center gap-[1px]">
+      <form
+        onSubmit={handleSubmit}
+        className="w-9/12 flex flex-row items-center justify-center gap-[1px]">
         <Input
           type="input"
           className="w-10/12 rounded-l-md border-0 bg-neutral-800"
           placeholder="Add a Kick streamer"
           value={kickNickname}
           onChange={(e) => setKickNickname(e.target.value)}
-          onKeyDown={(e) => handleAddEnter(e)}
         />
         <Button
           className="w-2/12 rounded-r-md border-0 bg-zinc-700 hover:bg-zinc-600 text-primary"
@@ -74,19 +85,18 @@ const KickMenuTab = () => {
             <IconPlus />
           )}
         </Button>
-      </div>
+      </form>
       <div className="text-red-500 min-h-[24px]">{info}</div>
       <div className="w-9/12 flex flex-col gap-2 overflow-y-auto max-h-36">
         {kickFollows?.map((followedStreamer) => (
-          <div 
+          <div
             key={followedStreamer}
             className="flex justify-between items-center bg-neutral-800 p-2 rounded-md hover:bg-neutral-700 transition-colors cursor-pointer group"
-            onClick={() => setKickFollows(kickFollows.filter((f) => f !== followedStreamer))}
-          >
+            onClick={() =>
+              setKickFollows(kickFollows.filter((f) => f !== followedStreamer))
+            }>
             <span className="text-primary">{followedStreamer}</span>
-            <IconX 
-              className="w-4 h-4 group-hover:text-red-500 transition-colors"
-            />
+            <IconX className="w-4 h-4 group-hover:text-red-500 transition-colors" />
           </div>
         ))}
       </div>
