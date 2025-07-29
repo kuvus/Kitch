@@ -88,7 +88,7 @@ const OptionsTab = () => {
         className="w-3/4 rounded-md border-0 hover:bg-green-800 bg-green-700 text-primary"
         disabled={false}
         onClick={() => setKickMenu(true)}>
-        Add Kick follows
+        Manage Kick follows
       </Button>
     </div>
   )

@@ -16,24 +16,31 @@ import SidebarTabs from "./components/tabs/SidebarTabs"
 import TopBar from "./components/tabs/TopBar"
 import TopCategoriesTab from "./components/tabs/TopCategoriesTab"
 import TopStreamTab from "./components/tabs/TopStreamsTab"
-import { categoryAtom, platformAtom, searchQueryAtom } from "./lib/util"
+import {
+  categoryAtom,
+  currentTabAtom,
+  platformAtom,
+  searchQueryAtom
+} from "./lib/util"
 
 function IndexPopup() {
   const [_, setSearchQuery] = useAtom(searchQueryAtom)
   const [platform, setPlatform] = useAtom(platformAtom)
   const [category, setCategory] = useAtom(categoryAtom)
+  const [currentTab, setCurrentTab] = useAtom(currentTabAtom)
 
   const [userTwitchKey] = useStorage("userTwitchKey")
   const twitchLoggedIn = userTwitchKey !== undefined
-  const handleTabsClick = () => {
+  const handleTabsClick = (value: string) => {
     setCategory("")
     setSearchQuery("")
+    setCurrentTab(value)
   }
 
   return (
     <Tabs
+      value={currentTab}
       onValueChange={handleTabsClick}
-      defaultValue="followed"
       className="h-[32rem] w-96 flex text-white">
       <div className="h-full w-12 bg-zinc-900 pt-3 flex flex-col">
         <SidebarTabs />
